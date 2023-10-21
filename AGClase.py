@@ -5,19 +5,17 @@ class AlgoritmoGenetico:
         self.tam_poblacion = tam_poblacion
         self.tam_cromosoma = tam_cromosoma
         self.rango_valores = rango_valores
-        self.poblacion = []
         self.mejor_solucion = None
         self.elitismo = elitismo
         self.prob_mutacion = prob_mutacion
         self.probabilidad_cruzamiento = probabilidad_cruzamiento
 
+    def crear_cromosoma(self):
+        cromosoma = self.rango_valores.copy()
+        return random.shuffle(cromosoma)
+    
     def crear_poblacion_inicial(self):
-        self.poblacion = []
-        for _ in range(self.tam_poblacion):
-            cromosoma = []
-            for _ in range(self.tam_cromosoma):
-                cromosoma.append(random.choice(self.rango_valores))  # Escoger un valor aleatorio del rango
-            self.poblacion.append(cromosoma)
+        return [self.crear_cromosoma() for _ in range(self.tam_poblacion)]
 
     def evaluar_fitness(self, cromosoma):
         # Implementa tu función de evaluación de aptitud según tu problema específico
@@ -56,11 +54,14 @@ class AlgoritmoGenetico:
 
     def entrenar(self, num_generaciones):
         self.crear_poblacion_inicial()
-
         for _ in range(num_generaciones):
             self.evaluar_fitness()
             self.seleccion()
             self.mutacion()
+            
+    def getElite(self, poblacio:list):
+        elitismo_count = int(self.elitismo * self.tam_poblacion)
+        return self.poblacion.sort(key=lambda x: self.evaluar_fitness(x), reverse=True)[:elitismo_count]
 
     def obtener_mejor_solucion(self):
         return self.mejor_solucion
