@@ -1,17 +1,9 @@
 import socket
-import random
-from Crypto.Cipher import AES
-from Crypto.Random import get_random_bytes
+import threading
 
 # Configuración del servidor
-server_ip = '127.0.0.1'  # Dirección IP del servidor
-server_port = 12345     # Puerto en el que escuchará el servidor
-
-# Generar una clave aleatoria para cifrado AES
-encryption_key = get_random_bytes(16)
-
-# Crear un diccionario para mantener las sesiones de los clientes
-client_sessions = {}
+server_ip = '10.1.1.1'
+server_port = 1212
 
 # Inicializar el servidor
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -20,26 +12,54 @@ server_socket.listen(5)
 
 print(f"Servidor en {server_ip}:{server_port}")
 
-# Función para otorgar una nueva sesión a un cliente
-def grant_new_session(client_socket):
-    # Generar un ID de cliente único
-    client_id = random.randint(1, 1000)
+# Diccionario para mantener las sesiones de los clientes
+client_sessions = {}
 
-    # Enviar el ID del cliente al cliente
-    client_socket.send(str(client_id).encode())
-
-    # Enviar la clave de cifrado al cliente
-    client_socket.send(encryption_key)
-
-    # Enviar la lista de clientes conectados al cliente
-    connected_clients = list(client_sessions.keys())
-    client_socket.send(str(connected_clients).encode())
+# Función para manejar las conexiones de los clientes
+def handle_client(client_socket, client_address):
+    # Otorgar nueva sesión al cliente
+    client_id = len(client_sessions) + 1
 
     # Agregar la sesión del cliente al diccionario
     client_sessions[client_id] = client_socket
 
-# Esperar conexiones entrantes
-while True:
-    client_socket, client_address = server_socket.accept()
-    print(f"Conexión entrante desde {client_address}")
-    grant_new_session(client_socket)
+    print(f"Cliente {client_id} conectado desde {client_address}")
+
+    # Manejar mensajes entrantes de este cliente
+    while True:
+        try:
+            message = client_socket.recv(1024)
+            if not message:
+                break
+
+            print(f"Mensaje del Cliente {client_id}: {message.decode()}")
+
+            # Reenviar mensaje a otros clientes
+            for other_client_id, other_client_socket in client_sessions.items():
+                if other_client_id != client_id:
+                    try:
+                        other_client_socket.send(message)
+                    except Exception as e:
+                        print(f"Error al reenviar mensaje al Cliente {other_client_id}: {e}")
+
+        except Exception as e:
+            print(f"Error al recibir mensaje del Cliente {client_id}: {e}")
+            break
+
+    # Cerrar conexión con el cliente
+    del client_sessions[client_id]
+    client_socket.close()
+    print(f"Cliente {client_id} desconectado")
+
+# Función para manejar las conexiones entrantes
+def accept_connections():
+    while True:
+        client_socket, client_address = server_socket.accept()
+
+        # Iniciar un hilo para manejar la conexión del cliente
+        client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
+        client_thread.start()
+
+# Iniciar hilo para aceptar conexiones entrantes
+accept_thread = threading.Thread(target=accept_connections)
+accept_thread.start()
