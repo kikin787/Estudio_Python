@@ -94,7 +94,7 @@ def imprimir_colas_procesadores(colas_procesadores):
     for i, cola in enumerate(colas_procesadores):
         print(f"Procesador {i} = {sum(cola)}")
 def distribuir_con_slide_window():
-    num_twits = 3600
+    num_twits = 250000
     num_procesadores = 8
     tamaño_ventana = num_procesadores * 2
     num_individuos = 10
