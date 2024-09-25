@@ -1,4 +1,5 @@
 animal = "    kikin EsCool   "
+animal1 = animal[::-1] #voltea el string
 print(animal.upper()) #hace el string en minuscula
 print(animal.lower()) #hace el string en mayuscula
 print(animal.strip().capitalize()) #elimina los espacios tanto de izquierda como  derecha y hace la primer posición en mayuscula
@@ -11,3 +12,4 @@ print(animal.replace(" ", "p")) #remplaza los espacios por la letra p
 print(animal.lower().replace("k", "qu")) #hace el string en minuscula y remplaza la k por qu
 print("ki" in animal) #devuelve true o false depende si está en el string
 print("ki" not in animal)#devuelve true o false depende si no está en el string
+print(animal1)
