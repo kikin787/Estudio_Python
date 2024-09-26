@@ -15,8 +15,9 @@ usuarios = [
 #filtar
 # nombres = [usuario for usuario in usuarios if usuario[1] > 2]
 
-# nombres = list(map(lambda user: user[0], usuarios))
+nombres = list(map(lambda user: user[0], usuarios))
 
 menosUsuarios = list(filter(lambda user: user[1] > 2, usuarios))
 
 print(menosUsuarios[1][0])
+print(nombres)
