@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 sendgrid = "*"
 python-dotenv = "*"
-numpy = "*"
 matplotlib = "*"
 pandas = "*"
 scikit-learn = "*"
