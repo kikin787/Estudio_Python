@@ -36,7 +36,25 @@
 #         return (card_one, card_two)
 
 # print(higher_card('K', 'Q'))
-result = 'unadressd'.strip('uned')
-print(result)  # Salida: 'unadress'
-result = 'unadressd'.strip('uned')
-print(result)  # Salida: 'unadress'
+# result = 'unadressd'.strip('uned')
+# print(result)  # Salida: 'unadress'
+# result = 'unadressd'.strip('uned')
+# print(result)  # Salida: 'unadress'
+
+# sting = 'unaddressed'
+# char = list(sting)
+# char = sorted(char)
+
+# stringOrdenado = ''.join(char)
+# print(stringOrdenado)
+# lst = ['a', 'b', 'c', 'd']
+# for index, value in enumerate(lst):
+#     print(index, value)
+
+def rank_elements(lst):
+    indexed_lst = list(enumerate(lst))
+    sorted_lst = sorted(indexed_lst, key=lambda x: x[1], reverse=True)
+    rank_dict = {index: rank + 1 for rank, (index, _) in enumerate(sorted_lst)}
+    ranked_list = [rank_dict for i, _ in indexed_lst]
+
+    return ranked_list

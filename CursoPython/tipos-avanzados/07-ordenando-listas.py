@@ -8,8 +8,8 @@ mascotas = [
     "Kikin"
 ]
 
-# mascotas.sort()
-# numeros.sort()
+print(sorted(mascotas))
+numeros.sort()
 # numeros.sort(reverse=True)
 
 numeros2 = sorted(numeros, reverse=True)
@@ -22,5 +22,5 @@ usuarios = [
     ["Pulga", 5]
 ]
 
-usuarios.sort(key=lambda el: el[2], reverse=True)
+usuarios.sort(key=lambda el: el[0])
 print(usuarios)
